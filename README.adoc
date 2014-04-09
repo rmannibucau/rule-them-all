@@ -1,0 +1,140 @@
+# Rule Them All!
+
+A set of JUnit rules to ease testing setup.
+
+Note dependencies are `optional` so you need to bring the ones the rule you use needs.
+
+## System properties
+
+There is already some rules to set system properties
+like http://www.stefan-birkner.de/system-rules/ but
+it doesn't support placeholder.
+
+The idea here is to declare system properties through annotations:
+
+[source,java]
+----
+@Rule
+public final PlaceHoldableSystemProperties unit = new PlaceHoldableSystemProperties();
+
+@Test
+@SystemProperties({
+  @SystemProperty(key = "my.key", value = "my value"),
+  @SystemProperty(key = "my.other.key", value = "my other value"),
+  @SystemProperty(key = "other.value.copy", value = "${my.other.key}")
+})
+public void myTest() throws IOException {
+    // ...
+}
+----
+
+@SystemProperty can be on method and class, both will be merged.
+
+## Ftp
+
+Another rule relies on MockFtpServer library to create a ftp server through a rule.
+
+Here too you define what is your ftp server through annotations. You can define
+the port/user/password/root directory to use through `@FtpServer` annotation but files too:
+
+[source,java]
+----
+@Rule
+public final FtpServerRule unit = new FtpServerRule(this);
+
+@Test
+@FtpServer(
+  files = {
+    @FtpFile(name = "foo.txt", content = "bar.txt")
+  },
+  user = "test", password = "pwd"
+)
+public void myTest() throws IOException {
+    assertNull(stayNull);
+    assertNotNull(fs);
+    assertNotNull(server);
+    assertTrue(server.getServerControlPort() > 0);
+    assertEquals(Integer.toString(server.getServerControlPort()), System.getProperty(FtpServer.FTP_PORT));
+    oldServer = server;
+}
+----
+
+Here method OR class annotation is taken into account.
+
+By default port is random and can be retrieved through the `FtpServer.FTP_PORT` system property.
+
+If you passed to the rule the test instance (or another class) you can use `@UnitInject` to get
+the FTP `FileSystem` to let the FTP files be dynamic or directly the `FakeFtpServer`.
+
+## Spring rule
+
+`spring-test` brings a nice runner for JUnit but its lifecycle doesn't work that well with rules
+(in particular if you rely on system properties). To solve it the runner logic was included in `SpringRule`:
+
+
+[source,java]
+----
+// @DirtiesContext(...)
+@ContextConfiguration("classpath:appCtx.xml")
+public class TestSpringRule {
+	@Rule
+	public final SpringRule rule = new SpringRule(this);
+
+	@Autowired
+	@Qualifier("foo")
+	private String fooSpringBean;
+
+	@Test
+	public void run() {
+		assertEquals("test", fooSpringBean);
+	}
+}
+----
+
+## Combine them
+
+Since Java 7 you have no more guarantee about fields order in a class. So when you declare rules you don't
+know which one will be called first.
+
+If you use the spring+ftp+system property rules it can be an issue. Let say you use a system property as place holder
+in your spring context and that it is the ftp url to use. In this case you want to:
+
+* start the ftp server (and implicitely set the ftp port in system property)
+* set the spring placeholder key in a system property using ftp port system property
+* start spring and reuse the url system property
+
+To sort rules JUnit includes now `RuleChain`.
+
+Here a sample spring bean which could be used in this context:
+
+[source,xml]
+----
+<bean id="port" class="java.lang.Integer">
+  <constructor-arg value="${ftp.port}" />
+</bean>
+----
+
+And here is the test class:
+
+[source,java]
+----
+@SystemProperties(@SystemProperty(key = "ftp.port", value = "${" + FtpServer.FTP_PORT + '}'))
+@ContextConfiguration("classpath:ftp.xml")
+public class TestCombineThemAll {
+    @Rule
+    public RuleChain chain = RuleChain.outerRule(new FtpServerRule(this))
+            .around(new PlaceHoldableSystemProperties())
+            .around(new SpringRule(this));
+
+    @Autowired
+    @Qualifier("port")
+    private int port;
+
+    @Test
+    @FtpServer // empty server for the demo
+    public void run() {
+        assertTrue(port > 0);
+    }
+}
+----
+
