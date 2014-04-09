@@ -60,6 +60,20 @@
     <spring.version>3.1.1.RELEASE</spring.version>
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <scm>
     <connection>scm:git:https://github.com/rmannibucau/rule-them-all.git</connection>
     <developerConnection>scm:git:https://github.com/rmannibucau/rule-them-all.git</developerConnection>
