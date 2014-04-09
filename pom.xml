@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
+  <groupId>com.github.rmannibucau</groupId>
+  <artifactId>rule-them-all</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <name>Rule Them All</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<!-- don't force these deps to come if you don't rely on it -->
+		<dependency>
+			<groupId>org.mockftpserver</groupId>
+			<artifactId>MockFtpServer</artifactId>
+			<version>2.4</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>1.7.5</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+  <properties>
+    <spring.version>3.1.1.RELEASE</spring.version>
+  </properties>
+
+  <scm>
+    <connection>scm:git:https://github.com/rmannibucau/rule-them-all.git</connection>
+    <developerConnection>scm:git:https://github.com/rmannibucau/rule-them-all.git</developerConnection>
+    <url>https://github.com/rmannibucau/featured-mock</url>
+  </scm>
+</project>
