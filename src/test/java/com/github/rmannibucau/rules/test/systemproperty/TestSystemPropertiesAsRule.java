@@ -1,4 +1,4 @@
-package com.github.rmannibucau.rules.internal.systemproperty;
+package com.github.rmannibucau.rules.test.systemproperty;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

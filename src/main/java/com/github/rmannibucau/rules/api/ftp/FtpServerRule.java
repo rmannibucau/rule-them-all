@@ -1,10 +1,8 @@
 package com.github.rmannibucau.rules.api.ftp;
 
-import static com.github.rmannibucau.rules.internal.Reflections.findFields;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-
+import com.github.rmannibucau.rules.api.LifecycleUnitException;
+import com.github.rmannibucau.rules.api.UnitInject;
+import com.github.rmannibucau.rules.internal.Reflections;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -15,9 +13,8 @@ import org.mockftpserver.fake.filesystem.FileEntry;
 import org.mockftpserver.fake.filesystem.FileSystem;
 import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
-import com.github.rmannibucau.rules.api.LifecycleUnitException;
-import com.github.rmannibucau.rules.api.UnitInject;
-import com.github.rmannibucau.rules.internal.Reflections;
+import java.io.IOException;
+import java.lang.reflect.Field;
 
 public class FtpServerRule implements TestRule {
 	public static final String CLASSPATH_PREFIX = "classpath:";
@@ -73,7 +70,7 @@ public class FtpServerRule implements TestRule {
 	}
 
 	private void inject(final UnixFakeFileSystem fileSystem, final FakeFtpServer ftp) throws IllegalAccessException {
-		for (final Field f : findFields(instance.getClass(), UnitInject.class)) {
+		for (final Field f : Reflections.findFields(instance.getClass(), UnitInject.class)) {
 			if (FileSystem.class.equals(f.getType())) {
 				checks(f);
 				Reflections.set(f, instance, fileSystem);

@@ -1,4 +1,4 @@
-package com.github.rmannibucau.rules.internal.spring;
+package com.github.rmannibucau.rules.test.spring;
 
 import static org.junit.Assert.assertEquals;
 

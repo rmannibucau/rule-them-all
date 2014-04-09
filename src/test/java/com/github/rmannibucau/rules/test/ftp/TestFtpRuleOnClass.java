@@ -1,4 +1,4 @@
-package com.github.rmannibucau.rules.internal.ftp;
+package com.github.rmannibucau.rules.test.ftp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,7 +18,8 @@ import com.github.rmannibucau.rules.api.ftp.FtpFile;
 import com.github.rmannibucau.rules.api.ftp.FtpServer;
 import com.github.rmannibucau.rules.api.ftp.FtpServerRule;
 
-public class TestFtpRule {
+@FtpServer(files = {@FtpFile(name = "foo.txt", content = "bar.txt")})
+public class TestFtpRuleOnClass {
 	@Rule
 	public final FtpServerRule unit = new FtpServerRule(this);
 
@@ -33,7 +34,6 @@ public class TestFtpRule {
 	private String stayNull = null;
 
 	@Test
-	@FtpServer(files = {@FtpFile(name = "foo.txt", content = "bar.txt")})
 	public void checkInjections() throws IOException {
 		assertNull(stayNull);
 		assertNotNull(fs);
