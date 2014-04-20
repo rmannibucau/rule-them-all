@@ -70,6 +70,9 @@ public class FtpServerRule implements TestRule {
 	}
 
 	private void inject(final UnixFakeFileSystem fileSystem, final FakeFtpServer ftp) throws IllegalAccessException {
+                if (instance == null) {
+                    return;
+                }
 		for (final Field f : Reflections.findFields(instance.getClass(), UnitInject.class)) {
 			if (FileSystem.class.equals(f.getType())) {
 				checks(f);
