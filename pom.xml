@@ -45,6 +45,12 @@
 			<version>${spring.version}</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast</artifactId>
+			<version>3.2.3</version>
+			<optional>true</optional>
+		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>

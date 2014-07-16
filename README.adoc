@@ -138,3 +138,56 @@ public class TestCombineThemAll {
 }
 ----
 
+
+## Hazelcast rule
+
+Simply starts a hazelcast instance either from provided config or from hazelcast.xml:
+
+[source,java]
+----
+public class HazelcastRuleTest {
+	@Rule
+	public final HazelcastRule rule = new HazelcastRule();
+
+	@Test
+	public void run() {
+		assertNotNull(rule.getInstance());
+		assertTrue(rule.getInstance().getLifecycleService().isRunning());
+	}
+}
+----
+
+## BaseDir rule
+
+Simple set a system property with current directory, useful to use as placeholder in combination with PlaceHoldableSystemProperties.
+
+Basic usage:
+
+[source,java]
+----
+public class BaseDirRuleTest {
+	@Rule
+	public final BaseDirRule rule = new BaseDirRule();
+
+	@Test
+	public void ensureSystemPropIsAvailable() {
+		assertNotNull(System.getProperty(rule.getPropName()));
+		assertNotNull(System.getProperty("project.basedir"));
+	}
+}
+----
+
+And with PlaceHoldableSystemProperties:
+
+
+[source,java]
+----
+@SystemProperties(@SystemProperty(key = "config.path", value = "${project.basedir}/src/test/configuration"))
+public class BaseDirRuleTest {
+	@Rule
+    public RuleChain chain = RuleChain.outerRule(new BaseDirRule())
+                .around(new PlaceHoldableSystemProperties());
+
+    // ...
+}
+----
