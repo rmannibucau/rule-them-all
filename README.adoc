@@ -66,6 +66,43 @@ By default port is random and can be retrieved through the `FtpServer.FTP_PORT` 
 If you passed to the rule the test instance (or another class) you can use `@UnitInject` to get
 the FTP `FileSystem` to let the FTP files be dynamic or directly the `FakeFtpServer`.
 
+## Sftp
+
+This rules allows to mock a very simple SFTP server.
+
+It is mainly inspired from FTP one.
+
+[source,java]
+----
+@Rule
+public final FtpServerRule unit = new FtpServerRule(this);
+
+@Test
+@SftpServer(@SftpFile(name = "/dummy/foo.txt", content = "Awesome"))
+public void myTest() throws IOException {
+    assertNotNull(server);
+    assertTrue(server.getPort() > 0);
+    assertEquals(Integer.toString(server.getPort()), System.getProperty(SftpServer.PORT));
+    oldServer = server;
+
+    // client
+    final JSch jSch = new JSch();
+    final Session session = jSch.getSession("test", "localhost", server.getPort());
+    session.setPassword("testpwd");
+    session.setConfig(new Properties() {{ put("StrictHostKeyChecking", "no"); }});
+    session.connect();
+    final ChannelSftp channel = ChannelSftp.class.cast(session.openChannel("sftp"));
+    channel.connect();
+    final ByteArrayOutputStream dst = new ByteArrayOutputStream();
+    channel.get("/dummy/foo.txt", dst);
+    assertEquals("Awesome", new String(dst.toByteArray()));
+}
+----
+
+Note that `SftpServer.PORT` system property is set to the server port is you need to use it
+with `PlaceHoldableSystemProperties` and that you can add later files on the server
+using the rule `addFile` method.
+
 ## Spring rule
 
 `spring-test` brings a nice runner for JUnit but its lifecycle doesn't work that well with rules
