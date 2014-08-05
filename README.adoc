@@ -30,6 +30,32 @@ public void myTest() throws IOException {
 
 @SystemProperty can be on method and class, both will be merged.
 
+\${} uses other system properties and you can also use \#{} to match a field. This last case is very useful with arquillian:
+
+
+[source,java]
+----
+@RunWith(Arquillian.class)
+public class MyTest {
+
+  // @Deployment etc...
+
+  @Rule // DON'T FORGET TO PASS THIS AS PARAMETER
+  public final PlaceHoldableSystemProperties unit = new PlaceHoldableSystemProperties(this);
+
+  @ArquillianResource
+  private URL url;
+
+  @Test
+  @SystemProperties({
+    @SystemProperty(key = "base.url", value = "#{url}")
+  })
+  public void myTest() throws IOException {
+    // ...
+  }
+}
+----
+
 ## Ftp
 
 Another rule relies on MockFtpServer library to create a ftp server through a rule.

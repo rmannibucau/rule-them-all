@@ -11,4 +11,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface SystemProperties {
 	SystemProperty[] value() default {};
+    String[] files() default {};
 }
