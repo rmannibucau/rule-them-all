@@ -30,11 +30,12 @@ public void myTest() throws IOException {
 
 @SystemProperty can be on method and class, both will be merged.
 
-\${} uses other system properties and you can also use \#{} to match a field. This last case is very useful with arquillian:
+${} uses other system properties and you can also use #{} to match a field. This last case is very useful with arquillian:
 
 
 [source,java]
 ----
+@RunAsClient // other you don't have @ArquillianResource URL
 @RunWith(Arquillian.class)
 public class MyTest {
 
