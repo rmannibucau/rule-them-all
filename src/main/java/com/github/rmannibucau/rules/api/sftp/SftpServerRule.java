@@ -178,29 +178,29 @@ public class SftpServerRule implements TestRule {
 		}
 	}
 
-	private static String content(final String content) {
+	private static byte[] content(final String content) {
 		if (content.startsWith(CLASSPATH_PREFIX)) {
 			try {
 				final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-				return new String(IoUtil.readBytes(contextClassLoader.getResourceAsStream(content.substring(CLASSPATH_PREFIX.length()))));
+				return IoUtil.readBytes(contextClassLoader.getResourceAsStream(content.substring(CLASSPATH_PREFIX.length())));
 			}
 			catch (IOException e) {
 				throw new LifecycleUnitException(e);
 			}
 		}
-		return content;
+		return content.getBytes();
 	}
 
 	private static class FakeSftpFile implements SshFile {
 		private final String path;
 		private final boolean isRegular;
-		private final String entry;
+		private final byte[] entry;
 		private final String user;
 		private final Map<String, FakeSftpFile> all;
 		private Map<Attribute, Object> attributes = new HashMap<Attribute, Object>();
 		private long lastModified;
 
-		public FakeSftpFile(final String path, final String content, final String user, final boolean isRegular,
+		public FakeSftpFile(final String path, final byte[] content, final String user, final boolean isRegular,
 				final Map<String, FakeSftpFile> files) {
 			this.path = path;
 			this.entry = content;
@@ -322,7 +322,7 @@ public class SftpServerRule implements TestRule {
 
 		@Override
 		public long getSize() {
-			return entry != null ? entry.length() : -1;
+			return entry != null ? entry.length : -1;
 		}
 
 		@Override
@@ -373,8 +373,8 @@ public class SftpServerRule implements TestRule {
 
 		@Override
 		public InputStream createInputStream(final long offset) throws IOException {
-			return new ByteArrayInputStream(entry != null ? entry.getBytes() : new byte[0]);
-		}
+			return new ByteArrayInputStream(entry != null ? entry: new byte[0]);
+		}g
 
 		@Override
 		public void handleClose() throws IOException {
