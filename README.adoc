@@ -255,3 +255,41 @@ public class BaseDirRuleTest {
     // ...
 }
 ----
+
+## PhantomJS rule
+
+Needed dependencies:
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.github.detro</groupId>
+  <artifactId>phantomjsdriver</artifactId>
+  <version>1.2.0</version>
+  <scope>test</scope>
+</dependency>
+<dependency>
+  <groupId>org.jboss.arquillian.extension</groupId>
+  <artifactId>arquillian-phantom-binary</artifactId>
+  <version>1.9.7</version>
+  <classifier>linux-64</classifier> <!-- adapt to your case -->
+  <scope>test</scope>
+</dependency>
+----
+
+Usage:
+
+[source,java]
+----
+public class PhantomJsRuleTest {
+    @Rule
+    public final PhantomJsRule rule = new PhantomJsRule();
+
+    @Test
+    public void run() throws IOException {
+        rule.getDriver().get("http://localhost:" + port + "/test");
+        String page = rule.getDriver().getPageSource();
+    }
+}
+----
+

@@ -57,6 +57,12 @@
       <version>0.12.0</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>com.github.detro</groupId>
+      <artifactId>phantomjsdriver</artifactId>
+      <version>1.2.0</version>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
 			<groupId>org.slf4j</groupId>
@@ -68,6 +74,13 @@
       <groupId>com.jcraft</groupId>
       <artifactId>jsch</artifactId>
       <version>0.1.51</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.extension</groupId>
+      <artifactId>arquillian-phantom-binary</artifactId>
+      <version>1.9.7</version>
+      <classifier>linux-64</classifier>
       <scope>test</scope>
     </dependency>
   </dependencies>
