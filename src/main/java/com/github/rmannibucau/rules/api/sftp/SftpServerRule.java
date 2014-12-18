@@ -374,7 +374,7 @@ public class SftpServerRule implements TestRule {
 		@Override
 		public InputStream createInputStream(final long offset) throws IOException {
 			return new ByteArrayInputStream(entry != null ? entry: new byte[0]);
-		}g
+		}
 
 		@Override
 		public void handleClose() throws IOException {
