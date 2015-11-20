@@ -293,3 +293,25 @@ public class PhantomJsRuleTest {
 }
 ----
 
+## File
+
+`com.github.rmannibucau.rules.api.file.FileRule` is intended to simply the creation of file and the validation
+of file output after the test.
+
+Usage:
+
+[source,java]
+----
+public class PhantomJsRuleTest {
+    @Rule
+    public final FileRule rule = new FileRule();
+
+    @Test
+    @CreateFile(path = "target/in/file.txt", content = "content")
+    @ExpectedOutput(path = "target/out/file-modified.txt", content = "content 2")
+    public void run() {
+        // do something with file.txt
+    }
+}
+----
+
