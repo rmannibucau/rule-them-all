@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
-import static com.github.rmannibucau.rules.internal.JarLocation.jarFromPrefix;
+import static com.github.rmannibucau.rules.internal.JarLocation.jarFromRegex;
 import static com.github.rmannibucau.rules.internal.Zips.unzip;
 
 public class PhantomJsRule implements TestRule {
@@ -39,7 +39,7 @@ public class PhantomJsRule implements TestRule {
             throw new IllegalStateException("Can't create " + phantomJs.getAbsolutePath());
         }
         try {
-            unzip(jarFromPrefix("arquillian-phantom-binary"), phantomJs);
+            unzip(jarFromRegex("arquillian-phantom-binary.*" + findSuffix()), phantomJs);
         } catch (final IOException e) {
             throw new IllegalStateException(e);
         }
@@ -67,6 +67,17 @@ public class PhantomJsRule implements TestRule {
                 }
             }
         };
+    }
+
+    private String findSuffix() {
+        final String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+        if (os.contains("mac")) {
+            return "macosx.jar";
+        }
+        if (os.contains("win")) {
+            return "windows.jar";
+        }
+        return ".jar"; // fine if a single impl is there
     }
 
     public PhantomJSDriver getDriver() {

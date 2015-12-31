@@ -107,6 +107,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.jboss.arquillian.extension</groupId>
+      <artifactId>arquillian-phantom-binary</artifactId>
+      <version>1.9.8</version>
+      <classifier>macosx</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>1.4.187</version>
